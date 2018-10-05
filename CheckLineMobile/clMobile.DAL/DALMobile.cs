@@ -3,35 +3,60 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
+using System.Data.OracleClient;
+using System.Data.Common;
 using GINT.DB.DAL;
-using clMobile.Model;
+using Microsoft.Practices.EnterpriseLibrary.Data;
 
 namespace clMobile.DAL
 {
     public class DALMobile
     {
-        private DALBaseEL _dalBaseEL;
-        
+        private Database _db;
+        private DbConnection _connection;
+        private DbCommand _cmd;
+        private String _sql;
+
         public DALMobile()
         {
-            _dalBaseEL = new DALBaseEL();
+            _db = DatabaseFactory.CreateDatabase("TAOL1_BCV");
+            _connection = _db.CreateConnection();
         }
 
-        public LineStatus ConsultarStatus(String pNumeroLinha)
+
+        public Boolean ConectarOracle()
         {
-            _dalBaseEL.GetDatabase("TAOL1_BCV");
-            LineStatus _lineStatus;
-            String _SQL = @"select distinct su.customer_id       as cliente,
-                                            pc.account_id        as Conta,
-                                            ch.arc_father_id     as UNIDADE_ORG,
-                                            su.prim_resource_val as Msisdn,
-                                            ar.resource_value    as SIM_CARD,
-                                            su.subscriber_type   as Tecnologia,
-                                            su.sub_status        as Status,
-                                            su.sub_status_date   as DATA_DE_STATUS,
-                                            st.act_rsn_desc      as MOTIVO_DA_ACAO,
-                                            an.name_line1        as RAZAO_SOCIAL,
-                                            an.tax_id            as CNPJ
+            OracleConnection connection = new OracleConnection("Data Source=TAOL1_BCV;Persist Security Info=True;User ID=U93312800;Password=mudarsenha#02;Unicode=True");
+            try
+            {
+                connection.Open();
+            }
+            catch
+            {
+                return false;
+            }
+
+            finally
+            {
+                connection.Close();
+            }
+
+            return true;
+        }
+
+        public void InicioProcesso()
+        {
+            _sql = @"select distinct su.customer_id       as cliente,
+                                     pc.account_id        as Conta,
+                                     ch.arc_father_id     as UNIDADE_ORG,
+                                     su.prim_resource_val as Msisdn,
+                                     ar.resource_value    as SIM_CARD,
+                                     su.subscriber_type   as Tecnologia,
+                                     su.sub_status        as Status,
+                                     su.sub_status_date   as DATA_DE_STATUS,
+                                     st.act_rsn_desc      as MOTIVO_DA_ACAO,
+                                     an.name_line1        as RAZAO_SOCIAL,
+                                     an.tax_id            as CNPJ
                               from mtaappc.subscriber         su,
                                    mtaappc.csm_act_rsn        st,
                                    mtaappc.charge_distribute  cd,
@@ -50,37 +75,44 @@ namespace clMobile.DAL
                               and ar.resource_type = 'S'
                               and (cd.expiration_date is null or cd.expiration_date >= sysdate)
                               and (ch.arc_valid_to >= sysdate or ch.arc_valid_to is null)
-                              and su.prim_resource_val="+pNumeroLinha;
-            try
+                              and su.prim_resource_val=:pNumeroLinha ";
+
+            _cmd = _db.GetSqlStringCommand(_sql);
+            _cmd.CommandType = CommandType.Text;
+            _cmd.Connection = _connection;
+            _db.AddInParameter(_cmd,"pNumeroLinha", DbType.Int64);
+            _connection.Open();
+
+        }
+
+        public Dictionary<String,String> ConsultarStatus(String pNumeroLinha)
+        {
+            Dictionary<String, String> _result = new Dictionary<string, string>();
+
+            _cmd.Parameters[0].Value = Convert.ToInt64(pNumeroLinha);
+            DbDataReader dr = _cmd.ExecuteReader();
+
+            if (dr.Read() && dr.HasRows)
             {
-                _dalBaseEL.OpenConnection();
-                IDataReader _dataReader = _dalBaseEL.ExecuteReader(_SQL);
-                if (_dataReader.Read())
-                {
-                    _lineStatus = new LineStatus();
-                    _lineStatus.Cliente = _dataReader.GetString(0);
-                    _lineStatus.Conta = _dataReader.GetString(1);
-                    _lineStatus.Unidade_Org = _dataReader.GetString(2);
-                    _lineStatus.MSISDN = _dataReader.GetString(3);
-                    _lineStatus.SIM_Card = _dataReader.GetString(4);
-                    _lineStatus.Tecnologia = _dataReader.GetString(5);
-                    _lineStatus.Status = _dataReader.GetString(6);
-                    _lineStatus.Data_de_Status = _dataReader.GetDateTime(7);
-                    _lineStatus.Motivo_Acao = _dataReader.GetString(8);
-                    _lineStatus.Razao_Social = _dataReader.GetString(9);
-                    _lineStatus.CNPJ = _dataReader.GetString(10);
-                }
-                else
-                {
-                    _lineStatus = new LineStatus();
-                }
-            }
-            finally
-            {
-                _dalBaseEL.CloseConnection();
+                _result.Add("Cliente", dr["Cliente"].ToString());
+                _result.Add("Conta", dr["Conta"].ToString());
+                _result.Add("Unidade_Org", dr["Unidade_Org"].ToString());
+                _result.Add("MSISDN", dr["MSISDN"].ToString());
+                _result.Add("SIM_CARD", dr["SIM_CARD"].ToString());
+                _result.Add("Tecnologia", dr["Tecnologia"].ToString());
+                _result.Add("Status", dr["Status"].ToString());
+                _result.Add("Data_de_Status", dr["Data_de_Status"].ToString());
+                _result.Add("Motivo_da_acao", dr["Motivo_da_Acao"].ToString());
+                _result.Add("Razao_Social", dr["Razao_Social"].ToString());
+                _result.Add("CNPJ", dr["CNPJ"].ToString());
             }
 
-            return _lineStatus;
+            return _result;
+        }
+
+        public void FimProcesso()
+        {
+            _connection.Close();
         }
     }
 }

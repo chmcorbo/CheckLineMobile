@@ -1,0 +1,5 @@
+C:\Projetos\git\CheckLineMobile\wfaCheckLineMobile\clMobileModel\bin\Debug\clMobile.Model.dll
+C:\Projetos\git\CheckLineMobile\wfaCheckLineMobile\clMobileModel\bin\Debug\clMobile.Model.pdb
+C:\Projetos\git\CheckLineMobile\wfaCheckLineMobile\clMobileModel\obj\Debug\clMobile.Model.csprojResolveAssemblyReference.cache
+C:\Projetos\git\CheckLineMobile\wfaCheckLineMobile\clMobileModel\obj\Debug\clMobile.Model.dll
+C:\Projetos\git\CheckLineMobile\wfaCheckLineMobile\clMobileModel\obj\Debug\clMobile.Model.pdb
