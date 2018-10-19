@@ -126,15 +126,6 @@ namespace wfaCheckLineMobile
 
         private void button1_Click(object sender, EventArgs e)
         {
-            clMobile.DAL.DALMobile _dalMobile = new clMobile.DAL.DALMobile();
-            if (_dalMobile.ConectarOracle())
-            {
-                MessageBox.Show("Conexão realizada com sucesso");
-            }
-            else
-            {
-                MessageBox.Show("Falha na conexão");
-            }
         }
     }
 }

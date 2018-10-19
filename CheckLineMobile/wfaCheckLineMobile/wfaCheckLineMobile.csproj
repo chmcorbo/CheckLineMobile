@@ -14,7 +14,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -82,10 +82,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\clMobile.DAL\clMobile.DAL.csproj">
-      <Project>{e783bb0f-bc4b-4548-993f-39b2be70546b}</Project>
-      <Name>clMobile.DAL</Name>
-    </ProjectReference>
     <ProjectReference Include="..\clMobile.Servicos\clMobile.Servicos.csproj">
       <Project>{e5eba23e-49c2-4812-b8f0-80292e86c69c}</Project>
       <Name>clMobile.Servicos</Name>

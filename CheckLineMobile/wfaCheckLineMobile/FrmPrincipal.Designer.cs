@@ -39,7 +39,6 @@
             this.lbIndicadorProcesso = new System.Windows.Forms.Label();
             this.btnFechar = new System.Windows.Forms.Button();
             this.btnProcessar = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnAbrirDe
@@ -117,9 +116,9 @@
             this.lbIndicadorProcesso.ForeColor = System.Drawing.Color.Red;
             this.lbIndicadorProcesso.Location = new System.Drawing.Point(279, 85);
             this.lbIndicadorProcesso.Name = "lbIndicadorProcesso";
-            this.lbIndicadorProcesso.Size = new System.Drawing.Size(182, 24);
+            this.lbIndicadorProcesso.Size = new System.Drawing.Size(206, 24);
             this.lbIndicadorProcesso.TabIndex = 5;
-            this.lbIndicadorProcesso.Text = "lbIndicadorProcesso";
+            this.lbIndicadorProcesso.Text = "Indicador de Progresso";
             this.lbIndicadorProcesso.Visible = false;
             // 
             // btnFechar
@@ -142,22 +141,11 @@
             this.btnProcessar.UseVisualStyleBackColor = true;
             this.btnProcessar.Click += new System.EventHandler(this.btnProcessar_Click);
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(374, 170);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 8;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // FrmPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(806, 497);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnProcessar);
             this.Controls.Add(this.btnFechar);
             this.Controls.Add(this.lbIndicadorProcesso);
@@ -172,7 +160,7 @@
             this.MinimizeBox = false;
             this.Name = "FrmPrincipal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Consultar Status do terminais";
+            this.Text = "Consultar Status do terminais - V1.0.1";
             this.Load += new System.EventHandler(this.FrmPrincipal_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -192,7 +180,6 @@
         private System.Windows.Forms.Label lbIndicadorProcesso;
         private System.Windows.Forms.Button btnFechar;
         private System.Windows.Forms.Button btnProcessar;
-        private System.Windows.Forms.Button button1;
     }
 }
 

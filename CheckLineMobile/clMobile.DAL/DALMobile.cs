@@ -6,44 +6,21 @@ using System.Data;
 using System.Data.OracleClient;
 using System.Data.Common;
 using GINT.DB.DAL;
-using Microsoft.Practices.EnterpriseLibrary.Data;
 
 namespace clMobile.DAL
 {
     public class DALMobile
     {
-        private Database _db;
-        private DbConnection _connection;
-        private DbCommand _cmd;
+        private OracleConnection _connection;
+        private OracleCommand _cmd;
         private String _sql;
 
         public DALMobile()
         {
-            _db = DatabaseFactory.CreateDatabase("TAOL1_BCV");
-            _connection = _db.CreateConnection();
+            _connection = new OracleConnection("Data Source=TAOL1_BCV;Persist Security Info=True;User ID=U93312800;Password=mudarsenha#02;Unicode=True");
+
         }
-
-
-        public Boolean ConectarOracle()
-        {
-            OracleConnection connection = new OracleConnection("Data Source=TAOL1_BCV;Persist Security Info=True;User ID=U93312800;Password=mudarsenha#02;Unicode=True");
-            try
-            {
-                connection.Open();
-            }
-            catch
-            {
-                return false;
-            }
-
-            finally
-            {
-                connection.Close();
-            }
-
-            return true;
-        }
-
+        
         public void InicioProcesso()
         {
             _sql = @"select distinct su.customer_id       as cliente,
@@ -77,10 +54,10 @@ namespace clMobile.DAL
                               and (ch.arc_valid_to >= sysdate or ch.arc_valid_to is null)
                               and su.prim_resource_val=:pNumeroLinha ";
 
-            _cmd = _db.GetSqlStringCommand(_sql);
+            _cmd = new OracleCommand(_sql, _connection);
             _cmd.CommandType = CommandType.Text;
-            _cmd.Connection = _connection;
-            _db.AddInParameter(_cmd,"pNumeroLinha", DbType.Int64);
+            OracleParameter _param = new OracleParameter("pNumeroLinha", OracleType.VarChar);
+            _cmd.Parameters.Add(_param);
             _connection.Open();
 
         }
@@ -90,7 +67,7 @@ namespace clMobile.DAL
             Dictionary<String, String> _result = new Dictionary<string, string>();
 
             _cmd.Parameters[0].Value = Convert.ToInt64(pNumeroLinha);
-            DbDataReader dr = _cmd.ExecuteReader();
+            OracleDataReader dr = _cmd.ExecuteReader();
 
             if (dr.Read() && dr.HasRows)
             {
